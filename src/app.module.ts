@@ -9,7 +9,6 @@ import { NotificationModule } from './notification/notification.module';
 import { MorganMiddleware } from './common/middlewares/morgan.middleware';
 import { NoteModule } from './note/note.module';
 import { ReminderModule } from './reminder/reminder.module';
-import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -46,7 +45,6 @@ import { ScheduleModule } from '@nestjs/schedule';
     NotificationModule,
     NoteModule,
     ReminderModule,
-    ScheduleModule.forRoot(),
   ],
 })
 export class AppModule implements NestModule {
