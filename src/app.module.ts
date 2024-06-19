@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
@@ -6,6 +6,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from './config.schema';
 import { BrandModule } from './brand/brand.module';
 import { NotificationModule } from './notification/notification.module';
+import { MorganMiddleware } from './common/middlewares/morgan.middleware';
+import { NoteModule } from './note/note.module';
 
 @Module({
   imports: [
@@ -40,6 +42,11 @@ import { NotificationModule } from './notification/notification.module';
     AuthModule,
     BrandModule,
     NotificationModule,
+    NoteModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(MorganMiddleware).forRoutes('*');
+  }
+}

@@ -2,13 +2,17 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserStatus } from './user-status.entity';
 import { BusinessUnit } from 'src/brand/entities/business-unit.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
+import { UserRoles } from '../enums/userRoles.enum';
+import { Note } from 'src/note/entities/note.entity';
 
 @Entity('users')
 export class User {
@@ -27,6 +31,7 @@ export class User {
   @Column()
   lastName: string;
 
+  @Index({ unique: true })
   @Column()
   username: string;
 
@@ -38,6 +43,9 @@ export class User {
 
   @Column()
   phone: string;
+
+  @Column({ default: 'agent' })
+  role: UserRoles;
 
   @Column({ nullable: true })
   whatsAppNumber: string;
@@ -83,6 +91,9 @@ export class User {
 
   @ManyToOne(() => Brand, (brand) => brand.users)
   brand: Brand;
+
+  @OneToMany(() => Note, (note) => note.user)
+  notes: Note[];
 
   @CreateDateColumn()
   createdAt: Date;
