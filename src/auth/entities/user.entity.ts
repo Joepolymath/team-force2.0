@@ -13,6 +13,7 @@ import { BusinessUnit } from 'src/brand/entities/business-unit.entity';
 import { Brand } from 'src/brand/entities/brand.entity';
 import { UserRoles } from '../enums/userRoles.enum';
 import { Note } from 'src/note/entities/note.entity';
+import { Reminder } from 'src/reminder/entities/reminder.entity';
 
 @Entity('users')
 export class User {
@@ -94,6 +95,9 @@ export class User {
 
   @OneToMany(() => Note, (note) => note.user)
   notes: Note[];
+
+  @OneToMany(() => Reminder, (reminder) => reminder.user)
+  reminders: Reminder[];
 
   @CreateDateColumn()
   createdAt: Date;
