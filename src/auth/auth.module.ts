@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
+import { AuthService } from './services/auth.service';
+import { AuthController } from './controllers/auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersRepository } from './users.repository';
 import { PassportModule } from '@nestjs/passport';
@@ -9,6 +9,8 @@ import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Brand } from 'src/brand/entities/brand.entity';
 import { UserStatus } from './entities/user-status.entity';
+import { UserStatusService } from './services/user-status.service';
+import { UserStatusController } from './controllers/user-status.controller';
 
 @Module({
   imports: [
@@ -26,8 +28,8 @@ import { UserStatus } from './entities/user-status.entity';
     }),
     TypeOrmModule.forFeature([UsersRepository, Brand, UserStatus]),
   ],
-  providers: [AuthService, JwtStrategy],
-  controllers: [AuthController],
+  providers: [AuthService, JwtStrategy, UserStatusService],
+  controllers: [AuthController, UserStatusController],
   exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}
