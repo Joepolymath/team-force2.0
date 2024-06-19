@@ -7,6 +7,16 @@ import { NoteService } from '../services/note.service';
   model: {
     type: Note,
   },
+  query: {
+    join: {
+      tags: {
+        eager: false,
+      },
+      user: {
+        eager: false,
+      },
+    },
+  },
 })
 @Controller('notes')
 export class NoteController implements CrudController<Note> {

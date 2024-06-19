@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Note } from './note.entity';
 
-@Entity('note-tags')
+@Entity('notetags')
 export class NoteTag {
   @PrimaryGeneratedColumn('uuid')
   id: string;

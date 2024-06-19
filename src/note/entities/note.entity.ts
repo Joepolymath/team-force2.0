@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -28,6 +29,9 @@ export class Note {
   user: User;
 
   @ManyToMany(() => NoteTag, (noteTag) => noteTag.notes)
+  @JoinTable({
+    name: 'notes_tags',
+  })
   tags: NoteTag[];
 
   @CreateDateColumn()
