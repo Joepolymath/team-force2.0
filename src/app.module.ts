@@ -10,6 +10,8 @@ import { MorganMiddleware } from './common/middlewares/morgan.middleware';
 import { NoteModule } from './note/note.module';
 import { ReminderModule } from './reminder/reminder.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ChatModule } from './chat/chat.module';
+import { ChatGateway } from './chat/gateways/chat.gateway';
 
 @Module({
   imports: [
@@ -47,7 +49,9 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     NoteModule,
     ReminderModule,
     EventEmitterModule.forRoot(),
+    ChatModule,
   ],
+  providers: [ChatGateway],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

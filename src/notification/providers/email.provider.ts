@@ -13,7 +13,7 @@ export class EmailService {
   constructor(private configService: ConfigService) {
     const apiKey = configService.get('SENDGRID_API_KEY');
     this.APIKEY = apiKey;
-    sg.setApiKey(this.APIKEY);
+    //  sg.setApiKey(this.APIKEY);
     this.from = configService.get('MAILER_FROM_OPTION');
   }
 

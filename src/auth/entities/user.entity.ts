@@ -90,7 +90,7 @@ export class User {
   @ManyToOne(() => BusinessUnit, (businessUnit) => businessUnit.users)
   businessUnit: BusinessUnit;
 
-  @ManyToOne(() => Brand, (brand) => brand.users)
+  @ManyToOne(() => Brand, (brand) => brand.users, { cascade: true })
   brand: Brand;
 
   @OneToMany(() => Note, (note) => note.user)
