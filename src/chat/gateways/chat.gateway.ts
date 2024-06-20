@@ -7,10 +7,14 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
+  cors: {
+    origin: '*',
+  },
   transports: ['websocket'],
   path: '/ws',
 })
@@ -26,7 +30,9 @@ export class ChatGateway
     this.logger.log('Initialized websocket connection');
   }
 
-  handleConnection(client: Socket) {
+  handleConnection(@ConnectedSocket() client: Socket) {
+    const token = client.handshake.auth?.token;
+    console.log({ client: client.handshake });
     this.logger.log(`Client connected: ${client.id}`);
     client.emit('connection_ack', 'You are connected to the WebSocket server');
   }

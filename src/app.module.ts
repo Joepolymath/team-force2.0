@@ -12,6 +12,12 @@ import { ReminderModule } from './reminder/reminder.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ChatModule } from './chat/chat.module';
 import { ChatGateway } from './chat/gateways/chat.gateway';
+import { User } from './auth/entities/user.entity';
+import { UserStatus } from './auth/entities/user-status.entity';
+import { Brand } from './brand/entities/brand.entity';
+import { BusinessUnit } from './brand/entities/business-unit.entity';
+import { Note } from './note/entities/note.entity';
+import { Reminder } from './reminder/entities/reminder.entity';
 
 @Module({
   imports: [
@@ -39,7 +45,7 @@ import { ChatGateway } from './chat/gateways/chat.gateway';
           username: configService.get('DB_USERNAME'),
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_DATABASE'),
-          entities: [__dirname + './**/*.entity{.ts,.js}'],
+          entities: [User, UserStatus, Brand, BusinessUnit, Note, Reminder],
         };
       },
     }),
