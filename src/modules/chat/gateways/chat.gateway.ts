@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Logger } from '@nestjs/common';
 import {
   MessageBody,
@@ -10,6 +11,7 @@ import {
   OnGatewayInit,
   ConnectedSocket,
 } from '@nestjs/websockets';
+import { Cache } from 'cache-manager';
 import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/modules/auth/services/auth.service';
 
@@ -26,11 +28,15 @@ export class ChatGateway
   @WebSocketServer()
   server: Server;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   private logger = new Logger(ChatGateway.name);
 
   // This keeps track of all the clients the user(s) is(are) connected on
+  // TODO: Handle with redis
   private connectedUsers: {
     [key: string]: string[];
   } = {};
@@ -43,7 +49,6 @@ export class ChatGateway
   handleConnection(@ConnectedSocket() client: Socket) {
     const connectionId = client.id;
     const token = client.handshake.auth.token;
-
     if (!token) {
       this.logger.warn('Client has no token');
       client.disconnect();
@@ -75,11 +80,31 @@ export class ChatGateway
     this.server.emit('message', message);
   }
 
-  private cacheUser(userId: string, clientId: string) {
-    if (this.connectedUsers[userId]) {
-      this.connectedUsers[userId].push(clientId);
-    } else {
+  private async cacheUser(userId: string, clientId: string) {
+    const cachedUsers = JSON.parse(
+      await this.cacheManager.get('connectedUsers'),
+    );
+    console.log({ cachedUsers });
+    if (!cachedUsers) {
       this.connectedUsers[userId] = [clientId];
+      const newCache = await this.cacheManager.set(
+        'connectedUsers',
+        JSON.stringify(this.connectedUsers),
+      );
+      console.log({ newCache });
+      return;
     }
+
+    if (cachedUsers[userId]) {
+      cachedUsers[userId].push(clientId);
+    } else {
+      cachedUsers[userId] = [clientId];
+    }
+
+    const updatedCache = await this.cacheManager.set(
+      'connectedUsers',
+      JSON.stringify(cachedUsers),
+    );
+    console.log({ updatedCache });
   }
 }

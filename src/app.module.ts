@@ -18,12 +18,25 @@ import { BusinessUnit } from './modules/brand/entities/business-unit.entity';
 import { Note } from './modules/note/entities/note.entity';
 import { Reminder } from './modules/reminder/entities/reminder.entity';
 import { TasksModule } from './modules/tasks/tasks.module';
+import { CacheModule, CacheStore } from '@nestjs/cache-manager';
+// import { redisStore } from 'cache-manager-redis-store';
+import { RedisClientOptions } from 'redis';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const redisStore = require('cache-manager-redis-store').redisStore;
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: [`.env.stage.${process.env.STAGE}`],
       validationSchema: configValidationSchema,
+    }),
+    CacheModule.register({
+      isGlobal: true,
+      store: redisStore,
+      host: 'localhost', // Redis server host
+      port: 6379, // Redis server port
+      ttl: 5000, // Cache expiration time
+      max: 10, // Maximum number of items in cache
     }),
     TasksModule,
     TypeOrmModule.forRootAsync({
