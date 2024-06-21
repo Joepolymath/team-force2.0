@@ -1,14 +1,26 @@
 import {
   ConflictException,
+  Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { EntityRepository, Repository } from 'typeorm';
+import { DataSource, DeepPartial, FindOneOptions } from 'typeorm';
 
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
-@EntityRepository(User)
-export class UsersRepository extends Repository<User> {
+@Injectable()
+export class UsersRepository {
+  constructor(private dataSource: DataSource) {}
+  private repo = this.dataSource.getRepository(User);
+
+  create(data: DeepPartial<User>): User {
+    return this.repo.create(data);
+  }
+
+  async findOne(query: FindOneOptions<User>) {
+    return await this.repo.findOne(query);
+  }
+
   async createUser(user: User): Promise<void> {
     const { password } = user;
 
@@ -18,7 +30,7 @@ export class UsersRepository extends Repository<User> {
     user.password = hashedPassword;
 
     try {
-      await this.save(user);
+      await this.repo.save(user);
     } catch (error) {
       if (error.code === '23505') {
         // duplicate username

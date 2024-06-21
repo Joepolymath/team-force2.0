@@ -1,4 +1,5 @@
 import {
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -16,7 +17,7 @@ import { AssignBusinessUnitDto } from '../dto/assign-business-unit.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(UsersRepository)
+    @Inject(UsersRepository)
     private usersRepository: UsersRepository,
     @InjectRepository(UserStatus)
     private userStatusRepository: Repository<UserStatus>,
@@ -29,10 +30,12 @@ export class AuthService {
       ? await this.userStatusRepository.findOne({ where: { id: statusId } })
       : null;
 
-    const user = this.usersRepository.create({
+    const userWithStatus = {
       ...userDetails,
       status,
-    });
+    };
+
+    const user = this.usersRepository.create(userWithStatus);
     return this.usersRepository.createUser(user);
   }
 
@@ -55,6 +58,7 @@ export class AuthService {
     const foundUser = await this.usersRepository.findOne({
       where: { id: payload.userId },
     });
+
     if (!foundUser) {
       throw new NotFoundException('User not found');
     }

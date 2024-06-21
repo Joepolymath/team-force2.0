@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
-import { Crud, CrudController } from '@nestjsx/crud';
 import { Reminder } from './entities/reminder.entity';
 import { ReminderService } from './reminder.service';
+import { Crud, CrudController } from '@dataui/crud';
 
 @Crud({
   model: {

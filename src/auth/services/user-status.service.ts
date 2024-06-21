@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
+
 import { UserStatus } from '../entities/user-status.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { TypeOrmCrudService } from '@dataui/crud-typeorm';
 
 @Injectable()
 export class UserStatusService extends TypeOrmCrudService<UserStatus> {

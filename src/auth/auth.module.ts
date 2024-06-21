@@ -28,7 +28,7 @@ import { UserStatusController } from './controllers/user-status.controller';
     }),
     TypeOrmModule.forFeature([UsersRepository, Brand, UserStatus]),
   ],
-  providers: [AuthService, JwtStrategy, UserStatusService],
+  providers: [AuthService, JwtStrategy, UserStatusService, UsersRepository],
   controllers: [AuthController, UserStatusController],
   exports: [JwtStrategy, PassportModule],
 })

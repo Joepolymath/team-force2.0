@@ -1,7 +1,7 @@
-import { Crud, CrudController } from '@nestjsx/crud';
 import { NoteTag } from '../entities/noteTags.entity';
 import { Controller } from '@nestjs/common';
 import { NoteTagService } from '../services/noteTag.service';
+import { Crud, CrudController } from '@dataui/crud';
 
 @Crud({
   model: {

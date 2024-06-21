@@ -1,7 +1,8 @@
 import { Controller } from '@nestjs/common';
-import { Crud, CrudController } from '@nestjsx/crud';
+// import { Crud, CrudController } from '@nestjsx/crud';
 import { Note } from '../entities/note.entity';
 import { NoteService } from '../services/note.service';
+import { Crud, CrudController } from '@dataui/crud';
 
 @Crud({
   model: {

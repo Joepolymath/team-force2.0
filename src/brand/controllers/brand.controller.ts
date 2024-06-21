@@ -1,7 +1,8 @@
 import { Controller } from '@nestjs/common';
-import { Crud, CrudController } from '@nestjsx/crud';
+
 import { Brand } from '../entities/brand.entity';
 import { BrandService } from '../services/brand.service';
+import { Crud, CrudController } from '@dataui/crud';
 
 @Crud({
   model: {
