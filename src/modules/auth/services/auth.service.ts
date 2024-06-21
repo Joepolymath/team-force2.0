@@ -13,6 +13,8 @@ import { JwtPayload } from '../jwt-payload.interface';
 import { UserStatus } from '../entities/user-status.entity';
 import { Repository } from 'typeorm';
 import { AssignBusinessUnitDto } from '../dto/assign-business-unit.dto';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class AuthService {
@@ -21,6 +23,7 @@ export class AuthService {
     private usersRepository: UsersRepository,
     @InjectRepository(UserStatus)
     private userStatusRepository: Repository<UserStatus>,
+    // @Inject(JwtService)
     private jwtService: JwtService,
   ) {}
 
@@ -46,12 +49,20 @@ export class AuthService {
     const user = await this.usersRepository.findOne({ where: { email } });
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      const payload: JwtPayload = { email };
-      const accessToken: string = await this.jwtService.sign(payload);
+      const payload: JwtPayload = { email, id: user.id };
+
+      const accessToken: string = await this.jwtService.sign(payload, {
+        secret: process.env.JWT_SECRET,
+      });
+
       return { accessToken };
     } else {
       throw new UnauthorizedException('Please check your login credentials');
     }
+  }
+
+  verifyToken(token: string): JwtPayload {
+    return this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
   }
 
   async assignBusinessUnit(payload: AssignBusinessUnitDto) {

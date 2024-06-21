@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   Index,
   ManyToOne,
@@ -99,9 +100,15 @@ export class User {
   @OneToMany(() => Reminder, (reminder) => reminder.user)
   reminders: Reminder[];
 
+  @Column({ nullable: true })
+  lastSeen: Date;
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
