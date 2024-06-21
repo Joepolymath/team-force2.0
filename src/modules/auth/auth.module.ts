@@ -25,7 +25,7 @@ dotenv.config();
         global: true,
         secret: configService.get('JWT_SECRET'),
         signOptions: {
-          expiresIn: 3600,
+          expiresIn: 60 * 60 * 24,
         },
       }),
     }),

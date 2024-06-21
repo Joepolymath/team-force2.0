@@ -14,6 +14,7 @@ import {
 import { Cache } from 'cache-manager';
 import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/modules/auth/services/auth.service';
+import { ConnectionData } from '../enums/caches.enum';
 
 @WebSocketGateway({
   cors: {
@@ -46,7 +47,7 @@ export class ChatGateway
     this.logger.log('Initialized websocket connection');
   }
 
-  handleConnection(@ConnectedSocket() client: Socket) {
+  async handleConnection(@ConnectedSocket() client: Socket) {
     const connectionId = client.id;
     const token = client.handshake.auth.token;
     if (!token) {
@@ -64,14 +65,43 @@ export class ChatGateway
     }
     console.log({ userId });
 
-    this.cacheUser(userId, connectionId);
+    await this.cacheUser(userId, connectionId);
     this.logger.log(`Client connected: `, {
       connectedUsers: this.connectedUsers,
     });
   }
 
-  handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`);
+  async handleDisconnect(client: Socket) {
+    try {
+      const connectionId = client.id;
+      const cachedConnectedIds = JSON.parse(
+        await this.cacheManager.get(ConnectionData.CONNECTED_IDS),
+      );
+      const userId = cachedConnectedIds[connectionId];
+      const connectedUsers = JSON.parse(
+        await this.cacheManager.get(ConnectionData.CONNECTED_USERS),
+      );
+      connectedUsers[userId] = connectedUsers[userId].filter(
+        (clientId: string) => clientId !== connectionId,
+      );
+      await this.cacheManager.set(
+        ConnectionData.CONNECTED_USERS,
+        JSON.stringify(connectedUsers),
+      );
+
+      delete cachedConnectedIds[connectionId];
+      await this.cacheManager.set(
+        ConnectionData.CONNECTED_IDS,
+        JSON.stringify(cachedConnectedIds),
+      );
+
+      this.logger.log(`Client disconnected: ${client.id}`);
+    } catch (error) {
+      this.logger.log(
+        `Client disconnected with error: ${client.id}. Error:`,
+        error,
+      );
+    }
   }
 
   @SubscribeMessage('message')
@@ -81,30 +111,53 @@ export class ChatGateway
   }
 
   private async cacheUser(userId: string, clientId: string) {
-    const cachedUsers = JSON.parse(
-      await this.cacheManager.get('connectedUsers'),
+    let cachedUsers = JSON.parse(
+      await this.cacheManager.get(ConnectionData.CONNECTED_USERS),
     );
     console.log({ cachedUsers });
     if (!cachedUsers) {
       this.connectedUsers[userId] = [clientId];
+      cachedUsers = this.connectedUsers;
       const newCache = await this.cacheManager.set(
-        'connectedUsers',
+        ConnectionData.CONNECTED_USERS,
         JSON.stringify(this.connectedUsers),
       );
       console.log({ newCache });
-      return;
+      // return;
     }
 
-    if (cachedUsers[userId]) {
+    if (cachedUsers[userId] && !cachedUsers[userId].includes(clientId)) {
       cachedUsers[userId].push(clientId);
     } else {
       cachedUsers[userId] = [clientId];
     }
 
-    const updatedCache = await this.cacheManager.set(
-      'connectedUsers',
+    await this.cacheManager.set(
+      ConnectionData.CONNECTED_USERS,
       JSON.stringify(cachedUsers),
     );
-    console.log({ updatedCache });
+
+    let cachedConnectedIds = await JSON.parse(
+      await this.cacheManager.get(ConnectionData.CONNECTED_IDS),
+    );
+    // let localConnectedIds: {
+    //   [key: string]: string
+    // }
+
+    if (!cachedConnectedIds) {
+      cachedConnectedIds = {
+        [clientId]: userId,
+      };
+    } else {
+      cachedConnectedIds[clientId] = userId;
+    }
+
+    console.log({ cachedConnectedIds });
+
+    const connectedIds = await this.cacheManager.set(
+      ConnectionData.CONNECTED_IDS,
+      JSON.stringify(cachedConnectedIds),
+    );
+    console.log({ connectedIds });
   }
 }
