@@ -1,23 +1,23 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from './config.schema';
-import { BrandModule } from './brand/brand.module';
-import { NotificationModule } from './notification/notification.module';
+import { BrandModule } from './modules/brand/brand.module';
+import { NotificationModule } from './modules/notification/notification.module';
 import { MorganMiddleware } from './common/middlewares/morgan.middleware';
-import { NoteModule } from './note/note.module';
-import { ReminderModule } from './reminder/reminder.module';
+import { NoteModule } from './modules/note/note.module';
+import { ReminderModule } from './modules/reminder/reminder.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { ChatModule } from './chat/chat.module';
-import { ChatGateway } from './chat/gateways/chat.gateway';
-import { User } from './auth/entities/user.entity';
-import { UserStatus } from './auth/entities/user-status.entity';
-import { Brand } from './brand/entities/brand.entity';
-import { BusinessUnit } from './brand/entities/business-unit.entity';
-import { Note } from './note/entities/note.entity';
-import { Reminder } from './reminder/entities/reminder.entity';
+import { ChatModule } from './modules/chat/chat.module';
+import { ChatGateway } from './modules/chat/gateways/chat.gateway';
+import { User } from './modules/auth/entities/user.entity';
+import { UserStatus } from './modules/auth/entities/user-status.entity';
+import { Brand } from './modules/brand/entities/brand.entity';
+import { BusinessUnit } from './modules/brand/entities/business-unit.entity';
+import { Note } from './modules/note/entities/note.entity';
+import { Reminder } from './modules/reminder/entities/reminder.entity';
+import { TasksModule } from './modules/tasks/tasks.module';
 
 @Module({
   imports: [

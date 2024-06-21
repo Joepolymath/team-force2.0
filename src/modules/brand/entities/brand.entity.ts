@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { BusinessUnit } from './business-unit.entity';
-import { User } from 'src/auth/entities/user.entity';
+import { User } from 'src/modules/auth/entities/user.entity';
 
 @Entity('brands')
 export class Brand {

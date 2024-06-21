@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Brand } from './brand.entity';
-import { User } from 'src/auth/entities/user.entity';
+import { User } from 'src/modules/auth/entities/user.entity';
 
 @Entity('businessunits')
 export class BusinessUnit {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Logger } from '@nestjs/common';
 import {
   MessageBody,
@@ -25,13 +26,14 @@ export class ChatGateway
 
   private logger = new Logger(ChatGateway.name);
 
-  afterInit(server: Server) {
+  afterInit(_server: Server) {
     //  console.log({ server });
     this.logger.log('Initialized websocket connection');
   }
 
   handleConnection(@ConnectedSocket() client: Socket) {
     const token = client.handshake.auth?.token;
+    console.log({ token });
     console.log({ client: client.handshake });
     this.logger.log(`Client connected: ${client.id}`);
     client.emit('connection_ack', 'You are connected to the WebSocket server');

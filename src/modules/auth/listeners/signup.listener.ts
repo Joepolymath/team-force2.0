@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { SignUpEvent } from 'src/auth/events/signup.events';
+import { SignUpEvent } from 'src/modules/auth/events/signup.events';
 
 @Injectable()
 export class NoteCreatedListener {

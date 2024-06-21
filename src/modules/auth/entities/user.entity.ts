@@ -9,11 +9,11 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UserStatus } from './user-status.entity';
-import { BusinessUnit } from 'src/brand/entities/business-unit.entity';
-import { Brand } from 'src/brand/entities/brand.entity';
+import { BusinessUnit } from 'src/modules/brand/entities/business-unit.entity';
+import { Brand } from 'src/modules/brand/entities/brand.entity';
 import { UserRoles } from '../enums/userRoles.enum';
-import { Note } from 'src/note/entities/note.entity';
-import { Reminder } from 'src/reminder/entities/reminder.entity';
+import { Note } from 'src/modules/note/entities/note.entity';
+import { Reminder } from 'src/modules/reminder/entities/reminder.entity';
 
 @Entity('users')
 export class User {

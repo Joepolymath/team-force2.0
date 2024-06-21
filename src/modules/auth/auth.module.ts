@@ -7,7 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Brand } from 'src/brand/entities/brand.entity';
+import { Brand } from 'src/modules/brand/entities/brand.entity';
 import { UserStatus } from './entities/user-status.entity';
 import { UserStatusService } from './services/user-status.service';
 import { UserStatusController } from './controllers/user-status.controller';
